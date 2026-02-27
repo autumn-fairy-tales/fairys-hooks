@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "1.1.0",
+  "version": "0.0.1",
   "private": true,
   "homepage": "https://github.com/autumn-fairy-tales/fairys-hooks",
   "description": "文档",
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@fairys/admin-tools-react": "^1.1.0",
-    "@fairys/hooks": "^0.0.0",
+    "@fairys/hooks": "^0.0.1",
     "@rspress/core": "^2.0.1"
   },
   "devDependencies": {

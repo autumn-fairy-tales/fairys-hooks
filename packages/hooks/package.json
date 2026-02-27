@@ -3,7 +3,7 @@
   "author": "SunLxy <1011771396@qq.com>",
   "description": "Fairys Hooks",
   "homepage": "https://github.com/autumn-fairy-tales/fairys-hooks",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "lib/index.js",
   "types": "esm/index.d.ts",
   "module": "esm/index.js",
