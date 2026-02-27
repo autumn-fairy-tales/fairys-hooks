@@ -25,6 +25,7 @@ jobs:
     - run: yarn install
     - run: yarn run build:all
     - run: yarn build:docs
+    - run: npm run build:example
 
     - name: example
       run: |
