@@ -56,7 +56,5 @@ export interface FairysPageDataInstanceOptions extends FairysPageDataInstanceSta
   getList?: FairysPageDataInstance['getList'];
   /**重置获取值的方法*/
   getResetValues?: FairysPageDataInstance['getResetValues'];
-  /**是否为查询表单代理*/
-  isSearchProxy?: boolean;
   [key: string]: any;
 }

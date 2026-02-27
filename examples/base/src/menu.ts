@@ -13,6 +13,12 @@ export const menuItems: MenuItemType[] = [
         icon: 'ant-design:home-outlined',
         isTabFixed: true,
       },
+      {
+        title: '自定义实体类',
+        path: '/custom',
+        icon: 'ant-design:home-outlined',
+        isTabFixed: true,
+      },
     ],
   },
 ];

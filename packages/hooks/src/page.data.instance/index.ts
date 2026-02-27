@@ -6,10 +6,13 @@ export * from './interface';
 /**
  * 页面数据实例
  */
-export class FairysPageDataInstance {
-  private _options: FairysPageDataInstanceOptions;
+export class FairysPageDataInstance<T extends FairysPageDataInstanceState = FairysPageDataInstanceState> {
+  public ref = <D extends Object>(value: D) => ref(value);
 
-  get defaultStore(): FairysPageDataInstanceState {
+  public _options: FairysPageDataInstanceOptions;
+
+  /**默认状态*/
+  get defaultStore(): T {
     return {
       dataList: [],
       page: 1,
@@ -29,36 +32,29 @@ export class FairysPageDataInstance {
       tabTotal: {},
       tabSelectedRows: {},
       tabSelectedRowKeys: {},
-    };
+    } as T;
   }
-
-  store = proxy<FairysPageDataInstanceState>(this.defaultStore);
+  /**状态*/
+  store = proxy<T>(this.defaultStore);
 
   /**请求之前处理参数*/
   onBefore?: (payload: Record<string, any>, instance: FairysPageDataInstance) => Record<string, any>;
   /**获取数据列表方法*/
   getList?: (
     params: Record<string, any>,
-    instance: FairysPageDataInstance,
+    instance: FairysPageDataInstance<T>,
   ) => Promise<{ total: number; list: Record<string, any>[] }>;
   /**重置获取值的方法*/
-  getResetValues?: (instance: FairysPageDataInstance) => Record<string, any>;
+  getResetValues?: (instance: FairysPageDataInstance<T>) => Record<string, any>;
 
   constructor(options?: FairysPageDataInstanceOptions) {
-    const { onBefore, getList, getResetValues, isSearchProxy, ...rest } = options || {};
+    const { onBefore, getList, getResetValues, ...rest } = options || {};
     this.onBefore = onBefore;
     this.getList = getList;
     this.getResetValues = getResetValues;
     Object.assign(this.store, rest);
     this._options = options || {};
-    if (isSearchProxy === false) {
-      this.store.search = ref({ ...this.store.search });
-      const keys = Object.keys(this.store.tabSearch);
-      for (let index = 0; index < keys.length; index++) {
-        const key = keys[index];
-        this.store.tabSearch[key] = ref(this.store.tabSearch[key]);
-      }
-    }
+    console.log('FairysPageDataInstance', this);
   }
 
   //========================================================查询表单===========================================
@@ -72,22 +68,14 @@ export class FairysPageDataInstance {
       if (oldSearch) {
         Object.assign(oldSearch, search);
       } else {
-        if (this._options.isSearchProxy === false) {
-          this.store.tabSearch[this.store.tabKey] = ref({ ...search });
-        } else {
-          this.store.tabSearch[this.store.tabKey] = { ...search };
-        }
+        this.store.tabSearch[this.store.tabKey] = { ...search };
       }
     } else {
       const oldSearch = this.store.search;
       if (oldSearch) {
         Object.assign(oldSearch, search);
       } else {
-        if (this._options.isSearchProxy === false) {
-          this.store.search = ref({ ...search });
-        } else {
-          this.store.search = { ...search };
-        }
+        this.store.search = { ...search };
       }
     }
     return this;
@@ -99,17 +87,9 @@ export class FairysPageDataInstance {
       if (!this.store.tabSearch) {
         this.store.tabSearch = {};
       }
-      if (this._options.isSearchProxy === false) {
-        this.store.tabSearch[this.store.tabKey] = ref({ ...values, ...search });
-      } else {
-        this.store.tabSearch[this.store.tabKey] = { ...values, ...search };
-      }
+      this.store.tabSearch[this.store.tabKey] = { ...values, ...search };
     } else {
-      if (this._options.isSearchProxy === false) {
-        this.store.search = ref({ ...values, ...search });
-      } else {
-        this.store.search = { ...values, ...search };
-      }
+      this.store.search = { ...values, ...search };
     }
     return this;
   };
@@ -208,7 +188,7 @@ export class FairysPageDataInstance {
         this.store.pageSize = pageSize;
       }
     }
-    // 执行查询列表数据
+    /**执行查询列表数据*/
     this.queryList();
     return this;
   };
@@ -235,8 +215,14 @@ export class FairysPageDataInstance {
 /**
  * 初始化实例
  */
-export const useFairysPageDataInstance = (options: FairysPageDataInstanceOptions = {}) => {
-  const ref = useRef(new FairysPageDataInstance(options));
+export const useFairysPageDataInstance = <T extends FairysPageDataInstanceState = FairysPageDataInstanceState>(
+  options: FairysPageDataInstanceOptions = {},
+) => {
+  const ref = useRef<FairysPageDataInstance<T>>();
+  if (!ref.current) {
+    // 不存在的时候才进行初始化
+    ref.current = new FairysPageDataInstance<T>(options);
+  }
   return ref.current;
 };
 
@@ -251,8 +237,10 @@ export const FairysPageDataInstanceContext = createContext(undefined);
  * 页面实例上下文解析
  * @returns 页面实例上下文
  */
-export const useFairysPageDataInstanceContext = <M extends FairysPageDataInstance = FairysPageDataInstance>() =>
-  useContext(FairysPageDataInstanceContext) as M;
+export const useFairysPageDataInstanceContext = <
+  T extends FairysPageDataInstanceState = FairysPageDataInstanceState,
+  M extends FairysPageDataInstance<T> = FairysPageDataInstance<T>,
+>() => useContext<M>(FairysPageDataInstanceContext);
 
 // ========================================================页面实例状态解析========================================================
 /**
@@ -262,11 +250,11 @@ export const useFairysPageDataInstanceContext = <M extends FairysPageDataInstanc
  */
 export const useFairysPageDataInstanceStore = <
   T extends FairysPageDataInstanceState = FairysPageDataInstanceState,
-  M extends FairysPageDataInstance = FairysPageDataInstance,
+  M extends FairysPageDataInstance<T> = FairysPageDataInstance<T>,
 >(options?: {
   sync?: boolean;
 }) => {
-  const instance = useFairysPageDataInstanceContext() as M;
+  const instance = useFairysPageDataInstanceContext<T, M>();
   const state = useSnapshot(instance.store, options);
   return [state, instance] as [T, M];
 };
@@ -278,15 +266,13 @@ export const useFairysPageDataInstanceStore = <
  */
 export const useFairysPageDataInstanceTableProps = <
   T extends FairysPageDataInstanceState = FairysPageDataInstanceState,
-  M extends FairysPageDataInstance = FairysPageDataInstance,
+  M extends FairysPageDataInstance<T> = FairysPageDataInstance<T>,
 >(options?: {
   sync?: boolean;
 }) => {
   const [state] = useFairysPageDataInstanceStore<T, M>(options);
   const isTabTable = state.isTabTable;
-
   const tabKey = isTabTable ? state.tabKey : undefined;
-
   const dataList = isTabTable ? state.tabDataList?.[tabKey] : state.dataList;
   const page = isTabTable ? state.tabPage?.[tabKey] || state.page : state.page;
   const pageSize = isTabTable ? state.tabPageSize?.[tabKey] || state.pageSize : state.pageSize;
@@ -294,7 +280,6 @@ export const useFairysPageDataInstanceTableProps = <
   const selectedRows = isTabTable ? state.tabSelectedRows?.[tabKey] : state.selectedRows;
   const selectedRowKeys = isTabTable ? state.tabSelectedRowKeys?.[tabKey] : state.selectedRowKeys;
   const loading = isTabTable ? state.loading?.[`${tabKey}_queryList`] : state.loading?.queryList;
-
   return {
     isTabTable,
     tabKey,
@@ -315,7 +300,7 @@ export const useFairysPageDataInstanceTableProps = <
  */
 export const useFairysPageDataInstanceSearchProps = <
   T extends FairysPageDataInstanceState = FairysPageDataInstanceState,
-  M extends FairysPageDataInstance = FairysPageDataInstance,
+  M extends FairysPageDataInstance<T> = FairysPageDataInstance<T>,
 >(options?: {
   sync?: boolean;
 }) => {
@@ -333,11 +318,11 @@ export const useFairysPageDataInstanceSearchProps = <
  */
 export const useFairysPageDataInstanceSnapshot = <
   T extends FairysPageDataInstanceState = FairysPageDataInstanceState,
-  M extends FairysPageDataInstance = FairysPageDataInstance,
+  M extends FairysPageDataInstance<T> = FairysPageDataInstance<T>,
 >(
   instance: M,
 ) => {
-  const state = useSnapshot(instance.store);
+  const state = useSnapshot<T>(instance.store) as T;
   const isTabTable = state.isTabTable;
   const tabKey = isTabTable ? state.tabKey : undefined;
   const isTabSearch = state.isTabSearch;

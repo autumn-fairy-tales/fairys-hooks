@@ -13,6 +13,7 @@ const MainIndex = () => {
   const pageDataInstance = useFairysPageDataInstance({
     getList: async (params) => {
       console.log('打印查询参数', params);
+      await new Promise((resolve) => setTimeout(resolve, 3000));
       return Promise.resolve({
         total: 100,
         list: Array.from({ length: 20 }, (_, i) => ({
@@ -24,6 +25,7 @@ const MainIndex = () => {
   });
 
   const state = useFairysPageDataInstanceSnapshot(pageDataInstance);
+  console.log('state-page', state, pageDataInstance);
 
   useEffect(() => {
     pageDataInstance.onUpdatedPage(1);
@@ -56,6 +58,8 @@ const MainIndex = () => {
         </FairysMainPageSearch>
         <FairysMainPageBody>
           <Table
+            loading={!!state.loading}
+            rowKey="name"
             columns={[
               {
                 title: '姓名',
