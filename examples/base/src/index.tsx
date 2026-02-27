@@ -26,7 +26,7 @@ const rootEl = document.getElementById('root');
 if (rootEl) {
   const root = ReactDOM.createRoot(rootEl);
   root.render(
-    <ConfigProvider locale={zhCN}>
+    <ConfigProvider locale={zhCN} componentSize="small">
       <ThemeProvider themeMode={'auto'}>
         <AuthRoot />
       </ThemeProvider>
