@@ -31,12 +31,6 @@ jobs:
       run: |
           mv ./examples/base/dist/ ./docs/doc_build/example/
 
-    - name: Create ZIP
-      run: |
-          cd ./examples/template/ 
-          zip -r template.zip . -x "node_modules/*" "dist/*" "src/.fairys/*" ".DS_Store"
-          mv template.zip ../../docs/doc_build/
-
     - name: Create Doc
       uses: peaceiris/actions-gh-pages@v4
       with:
