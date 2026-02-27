@@ -1,0 +1,37 @@
+import * as path from 'node:path';
+import { defineConfig, type UserConfig } from '@rspress/core';
+import { pluginPreview } from '@rspress/plugin-preview';
+
+export default defineConfig({
+  route: {
+    cleanUrls: true,
+  },
+  locales: [
+    {
+      lang: 'zh',
+      label: '简体中文',
+      title: 'Rspress',
+      description: '静态网站生成器',
+    },
+  ],
+  lang: 'zh',
+  base: '/fairys-hooks/',
+  root: path.join(__dirname, 'docs'),
+  title: 'Fairys Hooks',
+  icon: '/logo.png',
+  globalStyles: path.join(__dirname, 'styles/index.css'),
+  logo: {
+    light: '/logo.png',
+    dark: '/logo.png',
+  },
+  themeConfig: {
+    socialLinks: [
+      {
+        icon: 'github',
+        mode: 'link',
+        content: 'https://github.com/autumn-fairy-tales/fairys-hooks',
+      },
+    ],
+  },
+  plugins: [pluginPreview({ defaultRenderMode: 'pure' })],
+} as unknown as UserConfig);

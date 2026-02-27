@@ -1,0 +1,35 @@
+{
+  "name": "@fairys/hooks",
+  "author": "SunLxy <1011771396@qq.com>",
+  "description": "Fairys Hooks",
+  "homepage": "https://github.com/autumn-fairy-tales/fairys-hooks",
+  "version": "0.0.0",
+  "main": "esm/index.js",
+  "types": "esm/index.d.ts",
+  "module": "esm/index.js",
+  "license": "ISC",
+  "scripts": {
+    "build": "carefrees-rslib build",
+    "watch": "carefrees-rslib build --watch"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/autumn-fairy-tales/fairys-hooks.git",
+    "directory": "packages/hooks"
+  },
+  "files": [
+    "src",
+    "esm",
+    "lib"
+  ],
+  "dependencies": {
+    "valtio": "~2.1.5"
+  },
+  "devDependencies": {
+    "@types/react": "~18.2.21",
+    "react": "^18.0.0"
+  }
+}

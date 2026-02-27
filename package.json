@@ -1,0 +1,50 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "prepare": "husky install",
+    "----": "============================hooks=============================",
+    "watch": "npm run-script watch --workspace @fairys/hooks",
+    "build": "npm run-script build --workspace @fairys/hooks",
+    "-------": "============================docs=============================",
+    "build:docs": "npm run-script build --workspace docs",
+    "docs": "npm run-script dev --workspace docs",
+    "build:all": "npm run build && npm run build:docs",
+    "version": "lerna version --force-publish=* --no-changelog --no-git-tag-version --no-push",
+    "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\""
+  },
+  "dependencies": {
+    "@rsbuild/plugin-svgr": "~1.2.3",
+    "@carefrees/rslib": "~0.1.1",
+    "husky": "~9.1.7",
+    "lerna": "~8.2.3",
+    "prettier": "~2.7.0",
+    "pretty-quick": "~4.2.2",
+    "lint-staged": "~16.1.4",
+    "typescript": "~5.9.2",
+    "@tailwindcss/postcss": "~4.1.11",
+    "tailwindcss": "~4.1.11",
+    "@iconify/tailwind4": "~1.0.6",
+    "@iconify/json": "~2.2.367"
+  },
+  "overrides": {
+    "react": "~18.3.1",
+    "react-dom": "~18.3.1",
+    "@types/react": "~18.2.21",
+    "@types/react-dom": "~18.2.7"
+  },
+  "resolutions": {
+    "react": "~18.3.1",
+    "react-dom": "~18.3.1",
+    "@types/react": "~18.2.21",
+    "@types/react-dom": "~18.2.7"
+  },
+  "lint-staged": {
+    "*.{js,jsx,tsx,ts,less,md,json}": "prettier --write"
+  },
+  "workspaces": [
+    "packages/*",
+    "examples/*",
+    "docs"
+  ]
+}
