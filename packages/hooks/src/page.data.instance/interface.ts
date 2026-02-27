@@ -4,6 +4,12 @@ import { FairysPageDataInstance } from 'page.data.instance';
  * 页面数据状态数据类型
  */
 export interface FairysPageDataInstanceState {
+  /**编辑表单数据*/
+  editFormData?: Record<string, any>;
+  /**编辑类型*/
+  editType?: string;
+  /**编辑弹窗是否可见*/
+  editVisible?: boolean;
   /**加载状态*/
   loading?: Record<string, boolean>;
   /**查询表单数据*/

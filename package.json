@@ -9,6 +9,8 @@
     "-------": "============================docs=============================",
     "build:docs": "npm run-script build --workspace docs",
     "docs": "npm run-script dev --workspace docs",
+    "build:example": "npm run-script build --workspace example",
+    "start": "npm run-script dev --workspace example",
     "build:all": "npm run build && npm run build:docs",
     "version": "lerna version --force-publish=* --no-changelog --no-git-tag-version --no-push",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\""

@@ -7,8 +7,9 @@ export * from './interface';
  * 页面数据实例
  */
 export class FairysPageDataInstance<T extends FairysPageDataInstanceState = FairysPageDataInstanceState> {
+  /**创建ref对象*/
   public ref = <D extends Object>(value: D) => ref(value);
-
+  /**实例参数*/
   public _options: FairysPageDataInstanceOptions;
 
   /**默认状态*/
@@ -32,8 +33,12 @@ export class FairysPageDataInstance<T extends FairysPageDataInstanceState = Fair
       tabTotal: {},
       tabSelectedRows: {},
       tabSelectedRowKeys: {},
+      editVisible: false,
+      editType: '',
+      editFormData: {},
     } as T;
   }
+
   /**状态*/
   store = proxy<T>(this.defaultStore);
 
@@ -115,8 +120,9 @@ export class FairysPageDataInstance<T extends FairysPageDataInstanceState = Fair
   };
 
   //========================================================查询列表===========================================
+  /**获取查询列表参数*/
   getQueryListParams = () => {
-    const params = {
+    const params: Record<string, any> = {
       ...this.store.search,
       ...(this.store.isTabSearch ? this.store.tabSearch[this.store.tabKey] || {} : this.store.search || {}),
       page: this.store.isTabSearch ? this.store.tabPage[this.store.tabKey] || this.store.page : this.store.page,
@@ -309,6 +315,24 @@ export const useFairysPageDataInstanceSearchProps = <
   const tabKey = isTabSearch ? state.tabKey : undefined;
   const search = isTabSearch ? state.tabSearch?.[tabKey] : state.search;
   return { isTabSearch, tabKey, search };
+};
+
+/**
+ * 页面实例编辑表单属性解析
+ * @param options useSnapshot参数选项
+ * @returns 页面实例编辑表单属性
+ */
+export const useFairysPageDataInstanceEditFormProps = <
+  T extends FairysPageDataInstanceState = FairysPageDataInstanceState,
+  M extends FairysPageDataInstance<T> = FairysPageDataInstance<T>,
+>(options?: {
+  sync?: boolean;
+}) => {
+  const [state] = useFairysPageDataInstanceStore<T, M>(options);
+  const editVisible = state.editVisible;
+  const editType = state.editType;
+  const editFormData = state.editFormData;
+  return { editVisible, editType, editFormData };
 };
 
 /**

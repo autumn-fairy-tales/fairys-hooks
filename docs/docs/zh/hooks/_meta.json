@@ -1,1 +1,8 @@
-["index"]
+[
+  "index",
+  {
+    "type": "dir",
+    "name": "page.data.instance",
+    "label": "页面数据实例"
+  }
+]

@@ -15,7 +15,7 @@ export default defineConfig({
     },
   ],
   lang: 'zh',
-  base: '/fairys-hooks/',
+  base: process.env.NODE_ENV === 'production' ? '/fairys-hooks/' : '/',
   root: path.join(__dirname, 'docs'),
   title: 'Fairys Hooks',
   icon: '/logo.png',

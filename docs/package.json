@@ -4,12 +4,15 @@
   "private": true,
   "homepage": "https://github.com/autumn-fairy-tales/fairys-hooks",
   "description": "文档",
+  "type": "module",
   "scripts": {
     "build": "rspress build",
     "dev": "rspress dev",
     "preview": "rspress preview"
   },
   "dependencies": {
+    "@fairys/admin-tools-react": "^1.1.0",
+    "@fairys/hooks": "^0.0.0",
     "@rspress/core": "^2.0.1"
   },
   "devDependencies": {
