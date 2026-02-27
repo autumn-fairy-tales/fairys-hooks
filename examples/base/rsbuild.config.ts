@@ -6,17 +6,17 @@ import { pluginMockServer } from 'rspack-plugin-mock/rsbuild';
 
 export default defineConfig({
   output: {
-    assetPrefix: '/fairys-admin-react/example/',
+    assetPrefix: '/fairys-hooks/example/',
   },
   server: {
-    base: '/fairys-admin-react/example/',
+    base: '/fairys-hooks/example/',
     // The plugin will read the `proxy` option from the `server`
     proxy: {
       '/api': 'http://example.com',
     },
   },
   html: {
-    title: 'Fairys Admin React',
+    title: 'Fairys Hooks',
     favicon: './public/logo.png',
     tags: getLoadingHtmlTags('Fairys'),
   },
@@ -25,7 +25,6 @@ export default defineConfig({
     pluginReact(),
     RsbuildReactRoutesPlugin({
       loadType: 'lazy',
-      watchDirs: [{ dir: 'src/docs', routePrefix: '/docs' }],
       keepAliveBasePath: '@fairys/admin-tools-react/lib/components/keep-alive',
     }),
   ],

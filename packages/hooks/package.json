@@ -4,7 +4,7 @@
   "description": "Fairys Hooks",
   "homepage": "https://github.com/autumn-fairy-tales/fairys-hooks",
   "version": "0.0.0",
-  "main": "esm/index.js",
+  "main": "lib/index.js",
   "types": "esm/index.d.ts",
   "module": "esm/index.js",
   "license": "ISC",
