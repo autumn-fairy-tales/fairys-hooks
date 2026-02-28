@@ -1,9 +1,9 @@
-import { FairysPageDataInstance } from 'page.data.instance';
+import { FairysPageData } from 'page.data.instance';
 
 /**
  * 页面数据状态数据类型
  */
-export interface FairysPageDataInstanceState {
+export interface FairysPageDataState {
   /**编辑表单数据*/
   editFormData?: Record<string, any>;
   /**编辑类型*/
@@ -49,18 +49,38 @@ export interface FairysPageDataInstanceState {
   tabSelectedRows?: Record<string, any[]>;
   /**tab选择行数据键值*/
   tabSelectedRowKeys?: Record<string, React.Key[]>;
+  //====================下拉刷新、上拉加载================================
+  /**是否启用滚动加载*/
+  enableScrollLoad?: boolean;
+  /**下拉刷新状态*/
+  refresherStatus?: boolean;
+  /**上拉加载状态*/
+  loadMoreStatus?: boolean;
+  /**是否最后一页*/
+  hasLastPage?: boolean;
+  /**tab多页签下拉刷新状态*/
+  tabRefresherStatus?: Record<string, boolean>;
+  /**tab多页签上拉加载状态*/
+  tabLoadMoreStatus?: Record<string, boolean>;
+  /**tab多页签是否最后一页*/
+  tabHasLastPage?: Record<string, boolean>;
+
   [key: string]: any;
 }
 
 /**
  * 页面数据状态实例参数类型
  */
-export interface FairysPageDataInstanceOptions extends FairysPageDataInstanceState {
-  /**请求之前处理参数*/
-  onBefore?: FairysPageDataInstance['onBefore'];
+export interface FairysPageDataOptions extends FairysPageDataState {
+  /**格式化查询参数*/
+  formatQuery?: FairysPageData['formatQuery'];
   /**获取数据列表方法*/
-  getList?: FairysPageDataInstance['getList'];
+  getList?: FairysPageData['getList'];
   /**重置获取值的方法*/
-  getResetValues?: FairysPageDataInstance['getResetValues'];
+  getResetValues?: FairysPageData['getResetValues'];
+  /**那些字段取值对象 code值*/
+  codeFields?: FairysPageData['codeFields'];
+  /**那些字段取值对象的 value 值 */
+  valueFields?: FairysPageData['valueFields'];
   [key: string]: any;
 }

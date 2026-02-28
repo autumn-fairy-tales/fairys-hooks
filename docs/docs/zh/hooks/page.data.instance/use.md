@@ -6,16 +6,16 @@
 import { FairysMainPage } from '@fairys/admin-tools-react';
 import { FairysMainPageBody, FairysMainPageFooter, FairysMainPageSearch } from '@fairys/admin-tools-react';
 import {
-  useFairysPageDataInstance,
-  FairysPageDataInstanceContext,
-  useFairysPageDataInstanceSnapshot,
+  useFairysPageData,
+  FairysPageDataContext,
+  useFairysPageDataSnapshot,
 } from '@fairys/hooks';
 import { Table, Form, Input, Button } from 'antd';
 import { useEffect } from 'react';
 
 const MainIndex = () => {
   const [form] = Form.useForm();
-  const pageDataInstance = useFairysPageDataInstance({
+  const PageData = useFairysPageData({
     getList: async (params) => {
       console.log('打印查询参数', params);
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -29,22 +29,22 @@ const MainIndex = () => {
     },
   });
 
-  const state = useFairysPageDataInstanceSnapshot(pageDataInstance);
-  console.log('state-page', state, pageDataInstance);
+  const state = useFairysPageDataSnapshot(PageData);
+  console.log('state-page', state, PageData);
 
   useEffect(() => {
-    pageDataInstance.onUpdatedPage(1);
+    PageData.onUpdatedPage(1);
   }, []);
 
   return (
-    <FairysPageDataInstanceContext.Provider value={pageDataInstance}>
+    <FairysPageDataContext.Provider value={PageData}>
       <FairysMainPage>
         <FairysMainPageSearch>
           <Form
             form={form}
             initialValues={state.search}
             onValuesChange={(values) => {
-              pageDataInstance.onUpdatedSearch(values);
+              PageData.onUpdatedSearch(values);
             }}
             layout="inline"
           >
@@ -55,7 +55,7 @@ const MainIndex = () => {
               <Input />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" onClick={() => pageDataInstance.onUpdatedPage(1)}>
+              <Button type="primary" onClick={() => PageData.onUpdatedPage(1)}>
                 查询
               </Button>
             </Form.Item>
@@ -83,7 +83,7 @@ const MainIndex = () => {
               current: state?.page || 1,
               pageSize: state?.pageSize || 20,
               onChange(page, pageSize) {
-                pageDataInstance.onUpdatedPage(page, pageSize);
+                PageData.onUpdatedPage(page, pageSize);
               },
             }}
           />
@@ -96,7 +96,7 @@ const MainIndex = () => {
                 name: undefined,
                 age: undefined,
               });
-              pageDataInstance.onResetSearch({
+              PageData.onResetSearch({
                 name: undefined,
                 age: undefined,
               });
@@ -106,7 +106,7 @@ const MainIndex = () => {
           </Button>
         </FairysMainPageFooter>
       </FairysMainPage>
-    </FairysPageDataInstanceContext.Provider>
+    </FairysPageDataContext.Provider>
   );
 };
 export default MainIndex;
@@ -118,25 +118,25 @@ export default MainIndex;
 import { FairysMainPage } from '@fairys/admin-tools-react';
 import { FairysMainPageBody, FairysMainPageSearch } from '@fairys/admin-tools-react';
 import {
-  FairysPageDataInstanceContext,
-  useFairysPageDataInstanceSnapshot,
-  FairysPageDataInstance,
-  type FairysPageDataInstanceOptions,
-  type FairysPageDataInstanceState,
+  FairysPageDataContext,
+  useFairysPageDataSnapshot,
+  FairysPageData,
+  type FairysPageDataOptions,
+  type FairysPageDataState,
 } from '@fairys/hooks';
 import { Table, Form, Input, Button } from 'antd';
 import { useEffect, useRef } from 'react';
 import { useSnapshot } from 'valtio';
 
-interface FairysPageDataInstanceCustomState extends FairysPageDataInstanceState {
+interface FairysPageDataCustomState extends FairysPageDataState {
   editType?: 'add' | 'edit';
   editFormData?: Record<string, any>;
   editVisible?: boolean;
 }
 
-class FairysPageDataInstanceCustom extends FairysPageDataInstance<FairysPageDataInstanceCustomState> {
+class FairysPageDataCustom extends FairysPageData<FairysPageDataCustomState> {
   /**重写父级的默认状态*/
-  get defaultStore(): FairysPageDataInstanceCustomState {
+  get defaultStore(): FairysPageDataCustomState {
     return {
       ...super.defaultStore,
       editType: 'add',
@@ -146,25 +146,25 @@ class FairysPageDataInstanceCustom extends FairysPageDataInstance<FairysPageData
   }
 
   /**编辑*/
-  onEditOrAdd = (type: FairysPageDataInstanceCustomState['editType'], formData?: Record<string, any>) => {
+  onEditOrAdd = (type: FairysPageDataCustomState['editType'], formData?: Record<string, any>) => {
     this.store.editFormData = this.ref(formData || {});
     this.store.editType = type;
     this.store.editVisible = true;
   };
 }
 
-const useFairysPageDataInstanceCustom = (options: FairysPageDataInstanceOptions) => {
-  const ref = useRef<FairysPageDataInstanceCustom>();
+const useFairysPageDataCustom = (options: FairysPageDataOptions) => {
+  const ref = useRef<FairysPageDataCustom>();
   if (!ref.current) {
     // 不存在的时候才进行初始化
-    ref.current = new FairysPageDataInstanceCustom(options);
+    ref.current = new FairysPageDataCustom(options);
   }
   return ref.current;
 };
 
 const MainIndex = () => {
   const [form] = Form.useForm();
-  const pageDataInstance = useFairysPageDataInstanceCustom({
+  const PageData = useFairysPageDataCustom({
     getList: async (params) => {
       console.log('打印查询参数', params);
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -178,25 +178,23 @@ const MainIndex = () => {
     },
   });
 
-  const state = useFairysPageDataInstanceSnapshot(pageDataInstance);
-  console.log('state-custom', state, pageDataInstance);
-  const customState = useSnapshot(pageDataInstance.store);
-
-  console.log('customState-edit数据', customState.editFormData, customState.editType, customState.editVisible);
+  const state = useFairysPageDataSnapshot<FairysPageDataCustomState>(PageData);
+  console.log('state-custom', state, PageData);
+  console.log('customState-edit数据', state.state.editFormData, state.state.editType, state.state.editVisible);
 
   useEffect(() => {
-    pageDataInstance.onUpdatedPage(1);
+    PageData.onUpdatedPage(1);
   }, []);
 
   return (
-    <FairysPageDataInstanceContext.Provider value={pageDataInstance}>
+    <FairysPageDataContext.Provider value={PageData}>
       <FairysMainPage>
         <FairysMainPageSearch>
           <Form
             form={form}
             initialValues={state.search}
             onValuesChange={(values) => {
-              pageDataInstance.onUpdatedSearch(values);
+              PageData.onUpdatedSearch(values);
             }}
             layout="inline"
           >
@@ -207,7 +205,7 @@ const MainIndex = () => {
               <Input />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" onClick={() => pageDataInstance.onUpdatedPage(1)}>
+              <Button type="primary" onClick={() => PageData.onUpdatedPage(1)}>
                 查询
               </Button>
               <Button
@@ -216,7 +214,7 @@ const MainIndex = () => {
                     name: undefined,
                     age: undefined,
                   });
-                  pageDataInstance.onResetSearch({
+                  PageData.onResetSearch({
                     name: undefined,
                     age: undefined,
                   });
@@ -227,7 +225,7 @@ const MainIndex = () => {
               <Button
                 type="primary"
                 onClick={() => {
-                  pageDataInstance.onEditOrAdd('add');
+                  PageData.onEditOrAdd('add');
                 }}
               >
                 新增
@@ -248,7 +246,7 @@ const MainIndex = () => {
                 fixed: 'right',
                 render: (_, record) => (
                   <>
-                    <Button onClick={() => pageDataInstance.onEditOrAdd('edit', record)}>编辑</Button>
+                    <Button onClick={() => PageData.onEditOrAdd('edit', record)}>编辑</Button>
                   </>
                 ),
               },
@@ -269,15 +267,15 @@ const MainIndex = () => {
               current: state?.page || 1,
               pageSize: state?.pageSize || 20,
               onChange(page, pageSize) {
-                pageDataInstance.onUpdatedPage(page, pageSize);
+                PageData.onUpdatedPage(page, pageSize);
               },
             }}
           />
         </FairysMainPageBody>
       </FairysMainPage>
-    </FairysPageDataInstanceContext.Provider>
+    </FairysPageDataContext.Provider>
   );
 };
-
 export default MainIndex;
+
 ```

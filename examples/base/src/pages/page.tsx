@@ -1,16 +1,12 @@
 import { FairysMainPage } from '@fairys/admin-tools-react';
 import { FairysMainPageBody, FairysMainPageFooter, FairysMainPageSearch } from '@fairys/admin-tools-react';
-import {
-  useFairysPageDataInstance,
-  FairysPageDataInstanceContext,
-  useFairysPageDataInstanceSnapshot,
-} from '@fairys/hooks';
+import { useFairysPageData, FairysPageDataContext, useFairysPageDataSnapshot } from '@fairys/hooks';
 import { Table, Form, Input, Button } from 'antd';
 import { useEffect } from 'react';
 
 const MainIndex = () => {
   const [form] = Form.useForm();
-  const pageDataInstance = useFairysPageDataInstance({
+  const PageData = useFairysPageData({
     getList: async (params) => {
       console.log('打印查询参数', params);
       await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -24,22 +20,22 @@ const MainIndex = () => {
     },
   });
 
-  const state = useFairysPageDataInstanceSnapshot(pageDataInstance);
-  console.log('state-page', state, pageDataInstance);
+  const state = useFairysPageDataSnapshot(PageData);
+  console.log('state-page', state, PageData);
 
   useEffect(() => {
-    pageDataInstance.onUpdatedPage(1);
+    PageData.onUpdatedPage(1);
   }, []);
 
   return (
-    <FairysPageDataInstanceContext.Provider value={pageDataInstance}>
+    <FairysPageDataContext.Provider value={PageData}>
       <FairysMainPage>
         <FairysMainPageSearch>
           <Form
             form={form}
             initialValues={state.search}
             onValuesChange={(values) => {
-              pageDataInstance.onUpdatedSearch(values);
+              PageData.onUpdatedSearch(values);
             }}
             layout="inline"
           >
@@ -50,7 +46,7 @@ const MainIndex = () => {
               <Input />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" onClick={() => pageDataInstance.onUpdatedPage(1)}>
+              <Button type="primary" onClick={() => PageData.onUpdatedPage(1)}>
                 查询
               </Button>
             </Form.Item>
@@ -78,7 +74,7 @@ const MainIndex = () => {
               current: state?.page || 1,
               pageSize: state?.pageSize || 20,
               onChange(page, pageSize) {
-                pageDataInstance.onUpdatedPage(page, pageSize);
+                PageData.onUpdatedPage(page, pageSize);
               },
             }}
           />
@@ -91,7 +87,7 @@ const MainIndex = () => {
                 name: undefined,
                 age: undefined,
               });
-              pageDataInstance.onResetSearch({
+              PageData.onResetSearch({
                 name: undefined,
                 age: undefined,
               });
@@ -101,7 +97,7 @@ const MainIndex = () => {
           </Button>
         </FairysMainPageFooter>
       </FairysMainPage>
-    </FairysPageDataInstanceContext.Provider>
+    </FairysPageDataContext.Provider>
   );
 };
 export const Component = MainIndex;
