@@ -1,4 +1,6 @@
-import { FairysPageData } from 'page.data.instance';
+import type { FairysPageData } from 'page.data.instance/instance';
+
+export type MObject<T> = { [K in keyof T]: T[K] };
 
 /**
  * 页面数据状态数据类型

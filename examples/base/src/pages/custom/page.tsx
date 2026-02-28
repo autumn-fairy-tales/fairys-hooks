@@ -61,7 +61,6 @@ const MainIndex = () => {
   const state = useFairysPageDataSnapshot<FairysPageDataCustomState>(PageData);
   console.log('state-custom', state, PageData);
   console.log('customState-edit数据', state.state.editFormData, state.state.editType, state.state.editVisible);
-
   useEffect(() => {
     PageData.onUpdatedPage(1);
   }, []);
