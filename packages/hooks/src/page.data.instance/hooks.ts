@@ -216,3 +216,23 @@ export const useFairysPageDataSnapshot = <
     hasLastPage,
   };
 };
+
+/**
+ * 页面实例状态解析
+ * @param instance 页面实例
+ * @returns 页面实例状态
+ */
+export const useFairysPageDataStoreSnapshot = <
+  T extends FairysPageDataState = FairysPageDataState,
+  M extends FairysPageData<T> = FairysPageData<T>,
+>(
+  instance: M,
+  options?: {
+    sync?: boolean;
+  },
+) => {
+  const state = useSnapshot<T>(instance.store, options) as T;
+  const isTabTable = state.isTabTable;
+  const tabKey = isTabTable ? state.tabKey : undefined;
+  return { tabKey, state, fairysPageData: instance };
+};

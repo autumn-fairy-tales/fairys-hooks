@@ -19,6 +19,12 @@ export const menuItems: MenuItemType[] = [
         icon: 'ant-design:home-outlined',
         isTabFixed: true,
       },
+      {
+        title: '多tabs渲染',
+        path: '/tabs',
+        icon: 'ant-design:home-outlined',
+        isTabFixed: true,
+      },
     ],
   },
 ];

@@ -110,6 +110,7 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
     } else {
       this.store.search = { ...values, ...search };
     }
+    this.onUpdatedPage(1);
     return this;
   };
   //========================================================更新 loading===========================================
