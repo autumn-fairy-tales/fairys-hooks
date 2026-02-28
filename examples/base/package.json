@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/autumn-fairy-tales/fairys-hooks",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@fairys/admin-tools-react": "^1.1.3",
-    "@fairys/hooks": "^0.0.3",
+    "@fairys/hooks": "^0.0.4",
     "antd": "6.3.1",
     "antd-style": "^4.1.0",
     "axios": "~1.12.2",
