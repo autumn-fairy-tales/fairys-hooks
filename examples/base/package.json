@@ -10,7 +10,7 @@
     "preview": "rsbuild preview"
   },
   "dependencies": {
-    "@fairys/admin-tools-react": "^1.1.0",
+    "@fairys/admin-tools-react": "^1.1.1",
     "@fairys/hooks": "^0.0.3",
     "antd": "6.3.1",
     "antd-style": "^4.1.0",
@@ -21,7 +21,7 @@
     "react-router-dom": "~7.8.0"
   },
   "devDependencies": {
-    "@fairys/admin-tools-react-plugins": "^1.1.0",
+    "@fairys/admin-tools-react-plugins": "^1.1.1",
     "@iconify/json": "~2.2.367",
     "@iconify/tailwind4": "~1.0.6",
     "@rsbuild/core": "~1.6.14",
