@@ -388,7 +388,13 @@ export const FairysPageDataContext = createContext(undefined);
 export const useFairysPageDataContext = <
   T extends FairysPageDataState = FairysPageDataState,
   M extends FairysPageData<T> = FairysPageData<T>,
->() => useContext<M>(FairysPageDataContext);
+>() => {
+  const context = useContext(FairysPageDataContext);
+  if (!context) {
+    throw new Error('useFairysPageDataContext 必须在 FairysPageDataContext.Provider 中使用');
+  }
+  return context as M;
+};
 
 // ========================================================页面实例状态解析========================================================
 /**
