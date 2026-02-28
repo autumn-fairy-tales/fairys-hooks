@@ -160,10 +160,12 @@ export declare class FairysPageData<T extends FairysPageDataState = FairysPageDa
     /**加载更多*/
     onLoadMore: () => Promise<void>;
 }
+import { FairysPageDataState, FairysPageDataOptions } from './interface';
+import { FairysPageData } from './instance';
 /**
  * 初始化实例
  */
-export declare const useFairysPageData: <T extends FairysPageDataState = FairysPageDataState>(options?: FairysPageDataOptions) => FairysPageData<T>;
+export declare const useFairysPageData: <T extends FairysPageDataState = FairysPageDataState>(options: Partial<FairysPageDataOptions>) => FairysPageData<T>;
 /**
  * 页面实例上下文
  */
@@ -273,5 +275,16 @@ export declare const useFairysPageDataSnapshot: <T extends FairysPageDataState =
     loadMoreStatus: boolean;
     hasLastPage: boolean;
 };
-
+/**
+ * 页面实例状态解析
+ * @param instance 页面实例
+ * @returns 页面实例状态
+ */
+export declare const useFairysPageDataStoreSnapshot: <T extends FairysPageDataState = FairysPageDataState, M extends FairysPageData<T> = FairysPageData<T>>(instance: M, options?: {
+    sync?: boolean;
+}) => {
+    tabKey: string;
+    state: T;
+    fairysPageData: M;
+};
 ```
