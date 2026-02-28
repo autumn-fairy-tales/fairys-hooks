@@ -9,12 +9,9 @@ import {
 } from '@fairys/hooks';
 import { Table, Form, Input, Button } from 'antd';
 import { useEffect, useRef } from 'react';
-import { useSnapshot } from 'valtio';
 
 interface FairysPageDataCustomState extends FairysPageDataState {
-  editType?: 'add' | 'edit';
-  editFormData?: Record<string, any>;
-  editVisible?: boolean;
+  editType: 'add' | 'edit';
 }
 
 class FairysPageDataCustom extends FairysPageData<FairysPageDataCustomState> {
@@ -36,7 +33,7 @@ class FairysPageDataCustom extends FairysPageData<FairysPageDataCustomState> {
   };
 }
 
-const useFairysPageDataCustom = (options: FairysPageDataOptions) => {
+const useFairysPageDataCustom = (options: Partial<FairysPageDataOptions>) => {
   const ref = useRef<FairysPageDataCustom>();
   if (!ref.current) {
     // 不存在的时候才进行初始化

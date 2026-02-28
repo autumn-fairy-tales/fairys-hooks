@@ -10,18 +10,18 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
   /**创建ref对象*/
   public ref = <D extends Object>(value: D) => ref(value);
   /**实例参数*/
-  public _options: FairysPageDataOptions;
+  public _options: Partial<FairysPageDataOptions>;
 
   /**默认状态*/
   get defaultStore(): T {
     return {
-      dataList: [],
+      dataList: ref([]),
       page: 1,
       pageSize: 20,
       total: 0,
       search: {},
-      selectedRows: [],
-      selectedRowKeys: [],
+      selectedRows: ref([]),
+      selectedRowKeys: ref([]),
       loading: {},
       isTabSearch: false,
       isTabTable: false,
@@ -42,7 +42,7 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
       tabRefresherStatus: {},
       tabLoadMoreStatus: {},
       tabHasLastPage: {},
-    } as T;
+    } as unknown as T;
   }
   /**状态*/
   store = proxy<T>(this.defaultStore);
@@ -63,15 +63,15 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
   /**那些字段取值对象的 value 值 */
   valueFields?: string[] = [];
 
-  constructor(options?: FairysPageDataOptions) {
-    const { formatQuery, getList, getResetValues, codeFields, valueFields, ...rest } = options || {};
+  constructor(options: Partial<FairysPageDataOptions>) {
+    const { formatQuery, getList, getResetValues, codeFields, valueFields, ...rest } = options;
     this.formatQuery = formatQuery;
     this.getList = getList;
     this.getResetValues = getResetValues;
     this.codeFields = codeFields || [];
     this.valueFields = valueFields || [];
     Object.assign(this.store, rest);
-    this._options = options || {};
+    this._options = options;
   }
 
   //========================================================查询表单===========================================
@@ -153,16 +153,19 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
       pageSize: this.store.isTabTable ? this.store.tabPageSize?.[_tabKey] || this.store.pageSize : this.store.pageSize,
     };
 
-    const keys = Object.keys(params);
-    const _query: Record<string, any> = {};
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index];
-      if ((this.valueFields || []).includes(key)) {
+    const _query: Record<string, any> = { ...params };
+
+    if (Array.isArray(this.valueFields) && this.valueFields.length) {
+      for (let index = 0; index < this.valueFields.length; index++) {
+        const key = this.valueFields[index];
         _query[key] = params[key]?.value;
-      } else if ((this.codeFields || []).includes(key)) {
+      }
+    }
+
+    if (Array.isArray(this.codeFields) && this.codeFields.length) {
+      for (let index = 0; index < this.codeFields.length; index++) {
+        const key = this.codeFields[index];
         _query[key] = params[key]?.code;
-      } else {
-        _query[key] = params[key];
       }
     }
 
@@ -317,7 +320,7 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
       if (page >= count && total) {
         // 已经最后一页数据了
         hasLastPage = true;
-        this.store.tabHasLastPage[`${tabKey}HasLastPage`] = hasLastPage;
+        this.store.tabHasLastPage[tabKey] = hasLastPage;
         return;
       }
       const nextPage = page + 1;
@@ -325,16 +328,16 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
         // 当前是最后一页数据
         hasLastPage = true;
       }
-      this.store.tabLoadMoreStatus[`${tabKey}LoadMore`] = true;
+      this.store.tabLoadMoreStatus[tabKey] = true;
       // 判断是否最后一页数据
       this.store.tabPage[tabKey] = nextPage;
       await this.queryList();
-      this.store.tabHasLastPage[`${tabKey}HasLastPage`] = hasLastPage;
+      this.store.tabHasLastPage[tabKey] = hasLastPage;
       return;
     } else {
       const total = this.store.total || 0;
       const page = this.store.page || 1;
-      const pageSize = this.store.pageSize || this.store.defaultPageSize || 20;
+      const pageSize = this.store.pageSize || 20;
       const count = Math.ceil(total / pageSize);
       let hasLastPage = false;
       if (page >= count && total) {
@@ -361,7 +364,7 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
  * 初始化实例
  */
 export const useFairysPageData = <T extends FairysPageDataState = FairysPageDataState>(
-  options: FairysPageDataOptions = {},
+  options: Partial<FairysPageDataOptions>,
 ) => {
   const ref = useRef<FairysPageData<T>>();
   if (!ref.current) {
