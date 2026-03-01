@@ -29,8 +29,7 @@ export class FairysInstanceBase<T extends FairysInstanceBaseState = FairysInstan
    * @param value
    * @returns
    */
-  ref = <M extends Object>(value: M) => ref(value);
-
+  ref = ref;
   static ref = ref;
 
   /***

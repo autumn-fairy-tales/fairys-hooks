@@ -19,7 +19,7 @@ import {
 ## 类型
 
 ```ts
-
+import { ref } from 'valtio';
 export interface FairysInstanceBaseState extends Record<string, any> {
 }
 /**
@@ -38,9 +38,8 @@ export declare class FairysInstanceBase<T extends FairysInstanceBaseState = Fair
      * @param value
      * @returns
      */
-    ref: <M extends Object>(value: M) => M & {
-        $$valtioSnapshot: M;
-    };
+    ref: typeof ref;
+    static ref: typeof ref;
     /***
      * 判断值是否为代理对象
      * @param value 值
