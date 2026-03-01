@@ -110,11 +110,12 @@ export interface FairysPageDataOptions extends FairysPageDataState {
   valueFields?: FairysPageData['valueFields'];
   [key: string]: any;
 }
+import { FairysInstanceBase } from '../base.instance';
 
 /**
  * 页面数据实例
  */
-export declare class FairysPageData<T extends FairysPageDataState = FairysPageDataState> {
+export declare class FairysPageData<T extends FairysPageDataState = FairysPageDataState> extends FairysInstanceBase<T> {
     /**创建ref对象*/
     ref: <D extends Object>(value: D) => D & {
         $$valtioSnapshot: D;

@@ -1,14 +1,13 @@
 import { useRef } from 'react';
 import { proxy, ref, unstable_getInternalStates, useSnapshot } from 'valtio';
+import { isObject } from 'utils';
 
-export const isObject = (x: unknown): x is object => typeof x === 'object' && x !== null;
-
-export interface InstanceBaseState extends Record<string, any> {}
+export interface FairysInstanceBaseState extends Record<string, any> {}
 
 /**
  * 实例基类
  */
-export class InstanceBase<T extends InstanceBaseState = InstanceBaseState> {
+export class FairysInstanceBase<T extends FairysInstanceBaseState = FairysInstanceBaseState> {
   store = proxy<T>({} as T);
 
   ctor = (options: Partial<T>) => {
@@ -31,6 +30,9 @@ export class InstanceBase<T extends InstanceBaseState = InstanceBaseState> {
    * @returns
    */
   ref = <M extends Object>(value: M) => ref(value);
+
+  static ref = ref;
+
   /***
    * 判断值是否为代理对象
    * @param value 值
@@ -60,10 +62,12 @@ export class InstanceBase<T extends InstanceBaseState = InstanceBaseState> {
  * @param initial
  * @returns 实例基类
  */
-export function useInstanceBase<T extends InstanceBaseState = InstanceBaseState>(initial: Partial<T>) {
-  const ref = useRef<InstanceBase<T>>();
+export function useFairysInstanceBase<T extends FairysInstanceBaseState = FairysInstanceBaseState>(
+  initial: Partial<T>,
+) {
+  const ref = useRef<FairysInstanceBase<T>>();
   if (!ref.current) {
-    ref.current = new InstanceBase<T>().ctor(initial);
+    ref.current = new FairysInstanceBase<T>().ctor(initial);
   }
   return ref.current;
 }
@@ -73,8 +77,10 @@ export function useInstanceBase<T extends InstanceBaseState = InstanceBaseState>
  * @param options
  * @returns
  */
-export function useState<T extends InstanceBaseState = InstanceBaseState>(initial: Partial<T>) {
-  const instance = useInstanceBase(initial);
+export function useFairysInstanceState<T extends FairysInstanceBaseState = FairysInstanceBaseState>(
+  initial: Partial<T>,
+) {
+  const instance = useFairysInstanceBase(initial);
   const store = useSnapshot(instance.store) as T;
-  return [store, instance, store.__defaultValue] as [T, InstanceBase<T>, unknown];
+  return [store, instance, store.__defaultValue] as [T, FairysInstanceBase<T>, unknown];
 }

@@ -1,26 +1,26 @@
 import { useEffect, useRef } from 'react';
-import { InstanceBase } from 'base.instance';
+import { FairysInstanceBase } from 'base.instance';
 import { proxy, useSnapshot } from 'valtio';
 
-export interface SingleInstanceState<T = any> {
+export interface FairysSingleInstanceState<T = any> {
   loading: boolean;
   data?: T;
 }
 
-export interface SingleInstanceOptions<T = any> extends SingleInstanceState<T> {
-  request?: (instance: SingleInstance<T>) => Promise<{ data: T; success: boolean }>;
+export interface FairysSingleInstanceOptions<T = any> extends FairysSingleInstanceState<T> {
+  request?: (instance: FairysSingleInstance<T>) => Promise<{ data: T; success: boolean }>;
 }
 
-export class SingleInstance<T = any> extends InstanceBase<SingleInstanceState<T>> {
-  store = proxy<SingleInstanceState<T>>({
+export class FairysSingleInstance<T = any> extends FairysInstanceBase<FairysSingleInstanceState<T>> {
+  store = proxy<FairysSingleInstanceState<T>>({
     loading: false,
     data: undefined,
   });
 
   /**获取数据方法*/
-  request?: (instance: SingleInstance<T>) => Promise<{ data: T; success: boolean }>;
+  request?: (instance: FairysSingleInstance<T>) => Promise<{ data: T; success: boolean }>;
 
-  constructor(options: Partial<SingleInstanceOptions<T>>) {
+  constructor(options: Partial<FairysSingleInstanceOptions<T>>) {
     super();
     const { request, ...rest } = options;
     this.request = request;
@@ -46,15 +46,15 @@ export class SingleInstance<T = any> extends InstanceBase<SingleInstanceState<T>
   };
 }
 
-export function useSingleInstance<T = any>(options: Partial<SingleInstanceOptions<T>>) {
-  const ref = useRef<SingleInstance<T>>();
+export function useFairysSingleInstance<T = any>(options: Partial<FairysSingleInstanceOptions<T>>) {
+  const ref = useRef<FairysSingleInstance<T>>();
   if (!ref.current) {
-    ref.current = new SingleInstance(options);
+    ref.current = new FairysSingleInstance(options);
   }
   return ref.current;
 }
 
-export interface SingleQueryOptions<T = any> extends SingleInstanceOptions<T> {
+export interface FairysSingleQueryOptions<T = any> extends FairysSingleInstanceOptions<T> {
   /**是否在组件挂载时查询数据*/
   isMountedQuery?: boolean;
 }
@@ -64,9 +64,9 @@ export interface SingleQueryOptions<T = any> extends SingleInstanceOptions<T> {
  * @param options
  * @returns
  */
-export const useSingleQuery = <T = any>(options: Partial<SingleQueryOptions<T>>) => {
+export const useFairysSingleQuery = <T = any>(options: Partial<FairysSingleQueryOptions<T>>) => {
   const { isMountedQuery = true, ...rest } = options;
-  const singleInstance = useSingleInstance(rest);
+  const singleInstance = useFairysSingleInstance(rest);
   const store = useSnapshot(singleInstance.store);
   const loading = !!store.loading;
 

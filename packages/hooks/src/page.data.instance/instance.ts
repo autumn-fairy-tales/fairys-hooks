@@ -1,10 +1,10 @@
 import { proxy, ref } from 'valtio';
 import { FairysPageDataState, FairysPageDataOptions } from './interface';
-import { InstanceBase } from 'base.instance';
+import { FairysInstanceBase } from 'base.instance';
 /**
  * 页面数据实例
  */
-export class FairysPageData<T extends FairysPageDataState = FairysPageDataState> extends InstanceBase<T> {
+export class FairysPageData<T extends FairysPageDataState = FairysPageDataState> extends FairysInstanceBase<T> {
   /**实例参数*/
   public _options: Partial<FairysPageDataOptions>;
 

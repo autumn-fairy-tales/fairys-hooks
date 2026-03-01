@@ -1,10 +1,25 @@
 import { FairysMainPage } from '@fairys/admin-tools-react';
 import { FairysMainPageBody, FairysMainPageFooter, FairysMainPageSearch } from '@fairys/admin-tools-react';
-import { useFairysPageData, FairysPageDataContext, useFairysPageDataSnapshot } from '@fairys/hooks';
+import {
+  useFairysPageData,
+  FairysPageDataContext,
+  useFairysPageDataSnapshot,
+  useFairysSingleQuery,
+} from '@fairys/hooks';
 import { Table, Form, Input, Button } from 'antd';
 import { useEffect } from 'react';
 
 const MainIndex = () => {
+  const { store, singleInstance } = useFairysSingleQuery({
+    request: async (instance) => {
+      return Promise.resolve({
+        data: instance.ref(Array.from({ length: 10 }, (_, i) => i)),
+        success: true,
+      });
+    },
+  });
+  console.log('store', store, singleInstance);
+
   const [form] = Form.useForm();
   const PageData = useFairysPageData({
     getList: async (params) => {

@@ -2,7 +2,17 @@
   "index",
   {
     "type": "dir",
+    "name": "base.instance",
+    "label": "基础实例"
+  },
+  {
+    "type": "dir",
     "name": "page.data.instance",
     "label": "页面数据实例"
+  },
+  {
+    "type": "dir",
+    "name": "single",
+    "label": "单例请求实例"
   }
 ]
