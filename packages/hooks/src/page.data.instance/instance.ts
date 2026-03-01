@@ -1,11 +1,10 @@
 import { proxy, ref } from 'valtio';
 import { FairysPageDataState, FairysPageDataOptions } from './interface';
+import { InstanceBase } from 'base.instance';
 /**
  * 页面数据实例
  */
-export class FairysPageData<T extends FairysPageDataState = FairysPageDataState> {
-  /**创建ref对象*/
-  public ref = <D extends Object>(value: D) => ref(value);
+export class FairysPageData<T extends FairysPageDataState = FairysPageDataState> extends InstanceBase<T> {
   /**实例参数*/
   public _options: Partial<FairysPageDataOptions>;
 
@@ -41,6 +40,7 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
       tabHasLastPage: {},
     } as unknown as T;
   }
+
   /**状态*/
   store = proxy<T>(this.defaultStore);
 
@@ -61,6 +61,7 @@ export class FairysPageData<T extends FairysPageDataState = FairysPageDataState>
   valueFields?: string[] = [];
 
   constructor(options: Partial<FairysPageDataOptions>) {
+    super();
     const { formatQuery, getList, getResetValues, codeFields, valueFields, ...rest } = options;
     this.formatQuery = formatQuery;
     this.getList = getList;
